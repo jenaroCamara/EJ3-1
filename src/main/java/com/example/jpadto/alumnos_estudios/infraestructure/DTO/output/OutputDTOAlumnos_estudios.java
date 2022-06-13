@@ -1,6 +1,7 @@
-package com.example.jpadto.alumnos_estudios;
+package com.example.jpadto.alumnos_estudios.infraestructure.DTO.output;
 
 import com.example.jpadto.student.domain.Student;
+import com.example.jpadto.topic.infraestructure.dto.input.inputDTOtopic;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -9,13 +10,8 @@ import java.util.Date;
 
 @Data
 public class OutputDTOAlumnos_estudios {
-    @NotNull @NotBlank
-    int id_study;
-    @NotNull @NotBlank
-    Student student;
-    @NotNull @NotBlank
-    String asignatura;
-    @NotNull @NotBlank
+    String id_study;
+    inputDTOtopic id_topic;
     String comment;
     Date initial_date;
     Date finish_date;

@@ -10,6 +10,8 @@ public class InputDTOPersona {
     int id;
     @NotBlank(message = "usuario No puede estar vacio")
     String usuario;
+    String profesor;
+    String estudiante;
     @NotBlank(message = "name No puede estar vacio")
     String name;
     @NotBlank(message = "password No puede estar vacio")

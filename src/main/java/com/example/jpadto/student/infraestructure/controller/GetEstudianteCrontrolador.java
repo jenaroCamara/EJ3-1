@@ -1,12 +1,18 @@
 package com.example.jpadto.student.infraestructure.controller;
 
 
+import com.example.jpadto.alumnos_estudios.application.port.alumnos_estudiosService;
+import com.example.jpadto.alumnos_estudios.infraestructure.DTO.output.OutputDTOAlumnos_estudios;
 import com.example.jpadto.application.UsuarioServicioInterface;
 import com.example.jpadto.student.infraestructure.dto.output.Student.OutputDTOStudent;
 import com.example.jpadto.student.infraestructure.dto.output.Student.OutputDTOStudentFull;
+import com.example.jpadto.topic.infraestructure.dto.output.outputDTOtopic;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/EstudianteG")
@@ -28,4 +34,10 @@ public class GetEstudianteCrontrolador {
         }
         return h;
     }
+
+    @GetMapping("/getTopic/{id}")
+    public ResponseEntity<List<OutputDTOAlumnos_estudios>> getAsignaturas(@PathVariable String id)throws  Exception{
+        return ResponseEntity.ok().body(usuarioServicio.getAsignaturas(id));
+    }
+
 }

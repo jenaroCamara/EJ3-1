@@ -1,6 +1,6 @@
 package com.example.jpadto.student.infraestructure.dto.input;
 
-import com.example.jpadto.alumnos_estudios.InputDTOAlumnos_estudios;
+import com.example.jpadto.alumnos_estudios.infraestructure.DTO.input.InputDTOAlumnos_estudios;
 import lombok.Data;
 
 

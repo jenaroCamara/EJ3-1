@@ -1,6 +1,6 @@
 package com.example.jpadto.student.domain;
 
-import com.example.jpadto.alumnos_estudios.Alumnos_Estudios;
+import com.example.jpadto.alumnos_estudios.domain.Alumnos_Estudios;
 import com.example.jpadto.application.stringGenerator.StringPrefixedSequenceIdGenerator;
 import com.example.jpadto.profesor.domain.Profesor;
 import com.example.jpadto.persona.domain.Persona;
@@ -40,6 +40,6 @@ public class Student {
     @Column (name = "branch")
     @NotNull
     String branch;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     List<Alumnos_Estudios> asignaturas;
 }

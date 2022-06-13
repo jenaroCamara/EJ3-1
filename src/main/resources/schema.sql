@@ -67,7 +67,7 @@ table student_topic{
 }
 table technology{
   id_technology String [pk, increment],
-  branch branch [not null],
+  branch String [not null],
   name varchar(50),
   description varchar(200)
 }

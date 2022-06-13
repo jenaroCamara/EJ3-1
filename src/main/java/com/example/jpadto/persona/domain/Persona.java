@@ -1,12 +1,11 @@
 package com.example.jpadto.persona.domain;
 
+import com.example.jpadto.profesor.domain.Profesor;
+import com.example.jpadto.student.domain.Student;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
@@ -18,6 +17,12 @@ public class Persona {
     @Id
     @GeneratedValue
     int id;
+    //para chequear con mayor facilidad si una persona es estudiante o profesor
+    //la asociaremos con una relacion
+    @OneToOne(fetch = FetchType.LAZY)
+    Profesor profesor;
+    @OneToOne(fetch = FetchType.LAZY)//el tipo lazy, indica que no cargaremos al estudiante cuando se cree.
+    Student estudiante;
     @NotBlank(message = "usuario No puede estar vacio")
     String usuario;
     @NotBlank(message = "name No puede estar vacio")

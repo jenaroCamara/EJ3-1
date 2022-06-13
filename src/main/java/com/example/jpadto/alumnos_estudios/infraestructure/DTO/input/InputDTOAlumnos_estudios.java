@@ -1,4 +1,4 @@
-package com.example.jpadto.alumnos_estudios;
+package com.example.jpadto.alumnos_estudios.infraestructure.DTO.input;
 
 import lombok.Data;
 
@@ -8,13 +8,12 @@ import java.util.Date;
 
 @Data
 public class InputDTOAlumnos_estudios {
-    @NotNull @NotBlank
     int id_study;
-    @NotNull @NotBlank
+    @NotNull
     String student;
-    @NotNull @NotBlank
-    String asignatura;
-    @NotNull @NotBlank
+    @NotNull
+    String id_topic;
+    @NotNull
     String comment;
     Date initial_date;
     Date finish_date;
