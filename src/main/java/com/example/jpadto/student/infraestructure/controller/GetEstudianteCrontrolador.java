@@ -4,6 +4,7 @@ package com.example.jpadto.student.infraestructure.controller;
 import com.example.jpadto.alumnos_estudios.application.port.alumnos_estudiosService;
 import com.example.jpadto.alumnos_estudios.infraestructure.DTO.output.OutputDTOAlumnos_estudios;
 import com.example.jpadto.application.UsuarioServicioInterface;
+import com.example.jpadto.student.application.port.EstudianteService;
 import com.example.jpadto.student.infraestructure.dto.output.Student.OutputDTOStudent;
 import com.example.jpadto.student.infraestructure.dto.output.Student.OutputDTOStudentFull;
 import com.example.jpadto.topic.infraestructure.dto.output.outputDTOtopic;
@@ -19,13 +20,13 @@ import java.util.List;
 public class GetEstudianteCrontrolador {
 
     @Autowired
-    private UsuarioServicioInterface usuarioServicio;
+    private EstudianteService estudianteService;
     @Autowired
     private ModelMapper modelMapper;
 
     @GetMapping("/getEstudiante/{id}")
     public Object getEstudiante(@PathVariable String id, @RequestParam String queryParam) throws Exception {
-        Object h = usuarioServicio.getEstudiante(id);
+        Object h = estudianteService.getEstudiante(id);
         if (!queryParam.equals("full")){
             OutputDTOStudent out = new OutputDTOStudent();
             out.setId_student(id);
@@ -37,7 +38,7 @@ public class GetEstudianteCrontrolador {
 
     @GetMapping("/getTopic/{id}")
     public ResponseEntity<List<OutputDTOAlumnos_estudios>> getAsignaturas(@PathVariable String id)throws  Exception{
-        return ResponseEntity.ok().body(usuarioServicio.getAsignaturas(id));
+        return ResponseEntity.ok().body(estudianteService.getAsignaturas(id));
     }
 
 }

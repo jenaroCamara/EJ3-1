@@ -3,30 +3,23 @@ package com.example.jpadto.application;
 import com.example.jpadto.alumnos_estudios.application.port.alumnos_estudiosService;
 import com.example.jpadto.alumnos_estudios.infraestructure.DTO.output.OutputDTOAlumnos_estudios;
 import com.example.jpadto.persona.infraestructure.dto.output.outputDTOpersonafull;
-import com.example.jpadto.profesor.domain.Profesor;
 import com.example.jpadto.student.domain.Student;
 import com.example.jpadto.exceptions.BeanNotFoundException;
 import com.example.jpadto.exceptions.UnprocesableException;
-import com.example.jpadto.profesor.infraestructure.dto.input.InputDTOProfesor;
 import com.example.jpadto.student.infraestructure.dto.input.InputDTOStudent;
 import com.example.jpadto.persona.infraestructure.dto.input.InputDTOPersona;
 import com.example.jpadto.persona.domain.Persona;
-import com.example.jpadto.profesor.infraestructure.dto.output.OutputDTOProfesor;
 import com.example.jpadto.student.infraestructure.dto.output.Student.OutputDTOStudent;
 import com.example.jpadto.persona.infraestructure.dto.output.OutputDTOPersona;
 import com.example.jpadto.student.infraestructure.dto.output.Student.OutputDTOStudentFull;
 import com.example.jpadto.student.infraestructure.repository.EstudianteRepositorio;
-import com.example.jpadto.profesor.infraestructure.repository.ProfesorRepositorio;
 import com.example.jpadto.persona.infraestructure.repository.PersonaRepositorio;
 import com.example.jpadto.topic.domain.Topic;
 import com.example.jpadto.topic.infraestructure.dto.input.inputDTOtopic;
 import com.example.jpadto.topic.infraestructure.repository.TopicRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.EntityManager;
@@ -38,21 +31,12 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class UsuarioServicio implements UsuarioServicioInterface {
     @Autowired
-    alumnos_estudiosService AEservice;
-    @Autowired
     private PersonaRepositorio personaRepositorio;
-    @Autowired
-    private TopicRepository topicRepository;
-    @Autowired
-    private ProfesorRepositorio profesorRepositorio;
-    @Autowired
-    private EstudianteRepositorio estudianteRepositorio;
     @Autowired
     private ModelMapper modelMapper;
     @PersistenceContext
@@ -142,66 +126,6 @@ public class UsuarioServicio implements UsuarioServicioInterface {
         }
         personaRepositorio.deleteById(Integer.parseInt(id));
     }
-
-    //--------------------------Profesor----------------------
-
-    public OutputDTOProfesor guardarProfesor(InputDTOProfesor profesor) throws Exception {
-        Persona persona = personaRepositorio.findById(Integer.parseInt(profesor.getPersona())).orElseThrow(
-                () -> new UnprocesableException("Error, el usuario con id: " + profesor.getId_profesor() + ", no se encuentra"));
-        if (persona.getEstudiante() != null) {
-            throw new BeanNotFoundException("Error, el usuario no puede ser 2 cosas a la vez");
-        }
-        Profesor profesor1 = modelMapper.map(profesor, Profesor.class);
-        profesor1.setPersona(persona);
-        profesor1.getPersona().setProfesor(profesor1);
-        profesor1 = profesorRepositorio.save(profesor1);
-        return modelMapper.map(profesor1, OutputDTOProfesor.class);
-    }
-
-    //---------------------------Estudiante--------------------
-    public OutputDTOStudent guardarEstudiante(InputDTOStudent dtoStudent) {
-        Persona persona = personaRepositorio.findById(dtoStudent.getPersona()).orElseThrow(
-                () -> new UnprocesableException("Error, la persona con id: " + dtoStudent.getPersona() + ", no se encuentra"));
-
-        if (persona.getProfesor() != null) {
-            throw new BeanNotFoundException("Error, el usuario no puede ser 2 cosas a la vez");
-        }
-        Student estudiante = modelMapper.map(dtoStudent, Student.class);
-        estudiante.setPersona(persona);
-        estudiante.setAsignaturas(new ArrayList<>());
-        estudianteRepositorio.save(estudiante);
-        return modelMapper.map(estudiante, OutputDTOStudent.class);
-    }
-
-    public OutputDTOStudentFull getEstudiante(String id) {
-        Student estudent = estudianteRepositorio.findById(id).orElseThrow(() -> new UnprocesableException("Usuario no encontrado"));
-        OutputDTOStudentFull h = modelMapper.map(estudent, OutputDTOStudentFull.class);
-        return h;
-    }
-
-    public OutputDTOStudentFull actualizaTopics(String id) throws Exception {
-        List<Topic> lista = topicRepository.findAll();
-        for(int i=0; i < lista.size(); i++){
-            AEservice.anadeTopic(id,modelMapper.map(lista.get(i), inputDTOtopic.class));
-        }
-        Student estudiante = estudianteRepositorio.findById(id).orElseThrow(() -> new UnprocesableException("estudiante no encontrado"));
-        return modelMapper.map(estudiante, OutputDTOStudentFull.class);
-    }
-
-    public List<OutputDTOAlumnos_estudios> getAsignaturas(String id) throws Exception{
-        Student student = estudianteRepositorio.findById(id).orElseThrow(() -> new UnprocesableException("estudiante no encontrado"));
-        return student.getAsignaturas().stream().map(AE->modelMapper.map(AE, OutputDTOAlumnos_estudios.class)).collect(Collectors.toList());
-    }
-
-    public OutputDTOAlumnos_estudios eliminaTopic(String id, String id_topic) throws Exception{
-        Student estudiante = estudianteRepositorio.findById(id).orElseThrow(()->new UnprocesableException("Estudiante no encontrado"));
-        estudiante.getAsignaturas().remove(id_topic);
-        return modelMapper.map(estudiante.getAsignaturas(), OutputDTOAlumnos_estudios.class);
-    }
-
-
-
-
 
     /*---------------------------CRITERIA-------------------*/
     public List<Persona> getData(HashMap<String, Object> data){

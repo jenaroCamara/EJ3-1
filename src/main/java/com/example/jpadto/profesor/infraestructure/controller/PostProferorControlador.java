@@ -1,5 +1,6 @@
 package com.example.jpadto.profesor.infraestructure.controller;
 
+import com.example.jpadto.profesor.application.port.ProfesorServiceInterface;
 import com.example.jpadto.profesor.infraestructure.dto.input.InputDTOProfesor;
 import com.example.jpadto.profesor.infraestructure.dto.output.OutputDTOProfesor;
 import com.example.jpadto.application.UsuarioServicioInterface;
@@ -18,13 +19,13 @@ import javax.validation.Valid;
 @RequestMapping("/Profesor")
 public class PostProferorControlador {
     @Autowired
-    private UsuarioServicioInterface usuarioServicio;
+    private ProfesorServiceInterface profesorServicio;
     @Autowired
     private ModelMapper modelMapper;
 
     @PostMapping("/anadirProfesor")//Dejo esta función así, hasta ver si las validation van en dto o en las entidades
     public ResponseEntity<OutputDTOProfesor> anadirProfesor(@RequestBody @Valid InputDTOProfesor DTOprofesor) throws Exception {
-        OutputDTOProfesor profesor = usuarioServicio.guardarProfesor(DTOprofesor);
+        OutputDTOProfesor profesor = profesorServicio.guardarProfesor(DTOprofesor);
         return ResponseEntity.status(HttpStatus.CREATED).body(profesor);
     }
 }
