@@ -1,6 +1,7 @@
 package com.example.jpadto.application;
 
 import com.example.jpadto.alumnos_estudios.infraestructure.DTO.output.OutputDTOAlumnos_estudios;
+import com.example.jpadto.persona.domain.Persona;
 import com.example.jpadto.persona.infraestructure.dto.output.outputDTOpersonafull;
 import com.example.jpadto.profesor.infraestructure.dto.input.InputDTOProfesor;
 import com.example.jpadto.student.infraestructure.dto.input.InputDTOStudent;
@@ -20,6 +21,7 @@ public interface UsuarioServicioInterface {
     public OutputDTOPersona guardar(InputDTOPersona persona) throws Exception;
     public OutputDTOProfesor guardarProfesor(InputDTOProfesor profesor) throws Exception;
     public List<Object> getUsuarios(String queryParam);
+    public List<OutputDTOPersona> getUsuariosByNameCriteria(String nombre);
     public List<Object> getUsuariosByName(@PathVariable String nombre, String queryParam)throws Exception;
     public outputDTOpersonafull getUserById(String id) throws Exception;
     public InputDTOPersona actualiza(@RequestBody InputDTOPersona usuario) throws Exception;

@@ -1,5 +1,6 @@
 package com.example.jpadto.persona.infraestructure.controller;
 
+import com.example.jpadto.persona.domain.Persona;
 import com.example.jpadto.persona.infraestructure.dto.input.InputDTOPersona;
 import com.example.jpadto.persona.infraestructure.dto.output.OutputDTOPersona;
 import com.example.jpadto.application.UsuarioServicioInterface;
@@ -13,6 +14,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.PersistenceDelegate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +42,12 @@ public class GetPersonaControlador {
     @GetMapping("/getUsuarios/{nombre}")
     public List<Object> getUsuariosByName(@PathVariable String nombre, @RequestParam String queryParam) throws Exception {
         List<Object> listaUsuarios = usuarioServicio.getUsuariosByName(nombre, queryParam);
+        return listaUsuarios;
+    }
+
+    @GetMapping("/getUsuarios2/{nombre}")
+    public List<OutputDTOPersona> getUsuariosByName2(@PathVariable String nombre) throws Exception {
+        List<OutputDTOPersona> listaUsuarios = usuarioServicio.getUsuariosByNameCriteria(nombre);
         return listaUsuarios;
     }
 

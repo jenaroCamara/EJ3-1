@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,7 +83,21 @@ public class UsuarioServicio implements UsuarioServicioInterface {
         return ListaDTOs;
     }
 
-    public List<Object> getUsuariosByName(@PathVariable String nombre, String queryParam) {
+    public List<OutputDTOPersona> getUsuariosByNameCriteria(String nombre) {
+        HashMap<String, Object> data=new HashMap<>();
+        //en el hasmap comprobaré solo el nombre, pero podría añadir mas condiciones
+        if(nombre!=null){
+            data.put("name",nombre);
+        }
+        //obtenemos la lista del repositorio, y la sacamos como outputdtoPersona
+        List<Persona> lista = personaRepositorio.getData(data);
+        List<OutputDTOPersona> resultado = lista.stream()
+                .map(Usuario -> modelMapper.map(Usuario, outputDTOpersonafull.class))
+                .collect(Collectors.toList());
+        return resultado;
+    }
+
+    public List<Object> getUsuariosByName(String nombre, String queryParam) {
         List<Persona> lista = personaRepositorio.findByName(nombre);
         List<Object> secondList = new ArrayList<>();
         if (queryParam.equals("full")) {
