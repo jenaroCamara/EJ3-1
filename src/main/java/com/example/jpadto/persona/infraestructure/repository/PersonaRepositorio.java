@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface PersonaRepositorio extends JpaRepository<Persona,Integer> {
     List<Persona> findByName(String nombre);
-    public List<Persona> getData(HashMap<String, Object> nombre);
 }

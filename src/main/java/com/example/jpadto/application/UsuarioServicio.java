@@ -29,6 +29,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +55,8 @@ public class UsuarioServicio implements UsuarioServicioInterface {
     private EstudianteRepositorio estudianteRepositorio;
     @Autowired
     private ModelMapper modelMapper;
+    @PersistenceContext
+    private EntityManager em;
 
     private void comprobaciones(InputDTOPersona persona) {
         String auxName = persona.getUsuario();
@@ -90,7 +98,7 @@ public class UsuarioServicio implements UsuarioServicioInterface {
             data.put("name",nombre);
         }
         //obtenemos la lista del repositorio, y la sacamos como outputdtoPersona
-        List<Persona> lista = personaRepositorio.getData(data);
+        List<Persona> lista = getData(data);
         List<OutputDTOPersona> resultado = lista.stream()
                 .map(Usuario -> modelMapper.map(Usuario, outputDTOpersonafull.class))
                 .collect(Collectors.toList());
@@ -189,5 +197,36 @@ public class UsuarioServicio implements UsuarioServicioInterface {
         Student estudiante = estudianteRepositorio.findById(id).orElseThrow(()->new UnprocesableException("Estudiante no encontrado"));
         estudiante.getAsignaturas().remove(id_topic);
         return modelMapper.map(estudiante.getAsignaturas(), OutputDTOAlumnos_estudios.class);
+    }
+
+
+
+
+
+    /*---------------------------CRITERIA-------------------*/
+    public List<Persona> getData(HashMap<String, Object> data){
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Persona> query= cb.createQuery(Persona.class);
+        Root<Persona> root = query.from(Persona.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        data.forEach((field,value) ->
+        {
+            switch (field)
+            {
+                /*case "id":
+                    predicates.add(cb.equal(root.get(field), (Integer)value));
+                    break;*/
+                case "name":
+                    predicates.add(cb.like(root.get(field),"%"+(String)value+"%"));
+                    break;
+                /*case "address":
+                    predicates.add(cb.like(root.get(field),"%"+(String)value+"%"));
+                    break;*/
+            }
+
+        });
+        query.select(root).where(predicates.toArray(new Predicate[predicates.size()]));
+        return em.createQuery(query).getResultList();
     }
 }

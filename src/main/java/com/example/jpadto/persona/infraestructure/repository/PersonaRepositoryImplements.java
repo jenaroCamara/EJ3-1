@@ -1,6 +1,8 @@
-package com.example.jpadto.persona.infraestructure.repository;
+/*package com.example.jpadto.persona.infraestructure.repository;
 
 import com.example.jpadto.persona.domain.Persona;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,7 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PersonaRepositoryImplements {
+@Service
+public class PersonaRepositoryImplements implements PersonaRepositorio{
     @PersistenceContext
     private EntityManager em;
 
@@ -22,30 +25,4 @@ public class PersonaRepositoryImplements {
         return lista;
     }
 
-    public List<Persona> getData(HashMap<String, Object> data){
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Persona> query= cb.createQuery(Persona.class);
-        Root<Persona> root = query.from(Persona.class);
-
-        List<Predicate> predicates = new ArrayList<>();
-        data.forEach((field,value) ->
-        {
-            switch (field)
-            {
-                /*case "id":
-                    predicates.add(cb.equal(root.get(field), (Integer)value));
-                    break;*/
-                case "name":
-                    predicates.add(cb.like(root.get(field),"%"+(String)value+"%"));
-                    break;
-                /*case "address":
-                    predicates.add(cb.like(root.get(field),"%"+(String)value+"%"));
-                    break;*/
-            }
-
-        });
-        query.select(root).where(predicates.toArray(new Predicate[predicates.size()]));
-        return em.createQuery(query).getResultList();
-    }
-
-}
+}*/
