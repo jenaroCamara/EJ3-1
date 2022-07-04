@@ -15,10 +15,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.beans.PersistenceDelegate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -45,9 +44,11 @@ public class GetPersonaControlador {
         return listaUsuarios;
     }
 
-    @GetMapping("/getUsuarios2/{nombre}")
-    public List<OutputDTOPersona> getUsuariosByName2(@PathVariable String nombre) throws Exception {
-        List<OutputDTOPersona> listaUsuarios = usuarioServicio.getUsuariosByNameCriteria(nombre);
+    @GetMapping("/getUsuarios2/{nombre}/{fech}")
+    public List<OutputDTOPersona> getUsuariosByName2(@PathVariable String nombre, @PathVariable String fech) throws Exception {
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//        Date fecha = formatter.parse(fech);
+        List<OutputDTOPersona> listaUsuarios = usuarioServicio.getUsuariosByNameCriteria(nombre, fech);
         return listaUsuarios;
     }
 

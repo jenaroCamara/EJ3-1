@@ -1,22 +1,12 @@
 package com.example.jpadto.application;
 
-import com.example.jpadto.alumnos_estudios.application.port.alumnos_estudiosService;
-import com.example.jpadto.alumnos_estudios.infraestructure.DTO.output.OutputDTOAlumnos_estudios;
 import com.example.jpadto.persona.infraestructure.dto.output.outputDTOpersonafull;
-import com.example.jpadto.student.domain.Student;
 import com.example.jpadto.exceptions.BeanNotFoundException;
 import com.example.jpadto.exceptions.UnprocesableException;
-import com.example.jpadto.student.infraestructure.dto.input.InputDTOStudent;
 import com.example.jpadto.persona.infraestructure.dto.input.InputDTOPersona;
 import com.example.jpadto.persona.domain.Persona;
-import com.example.jpadto.student.infraestructure.dto.output.Student.OutputDTOStudent;
 import com.example.jpadto.persona.infraestructure.dto.output.OutputDTOPersona;
-import com.example.jpadto.student.infraestructure.dto.output.Student.OutputDTOStudentFull;
-import com.example.jpadto.student.infraestructure.repository.EstudianteRepositorio;
 import com.example.jpadto.persona.infraestructure.repository.PersonaRepositorio;
-import com.example.jpadto.topic.domain.Topic;
-import com.example.jpadto.topic.infraestructure.dto.input.inputDTOtopic;
-import com.example.jpadto.topic.infraestructure.repository.TopicRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +18,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,11 +67,12 @@ public class UsuarioServicio implements UsuarioServicioInterface {
         return ListaDTOs;
     }
 
-    public List<OutputDTOPersona> getUsuariosByNameCriteria(String nombre) {
+    public List<OutputDTOPersona> getUsuariosByNameCriteria(String nombre, String fecha) {
         HashMap<String, Object> data=new HashMap<>();
         //en el hasmap comprobaré solo el nombre, pero podría añadir mas condiciones
         if(nombre!=null){
             data.put("name",nombre);
+            data.put("created_date",fecha);
         }
         //obtenemos la lista del repositorio, y la sacamos como outputdtoPersona
         List<Persona> lista = getData(data);
@@ -138,15 +131,22 @@ public class UsuarioServicio implements UsuarioServicioInterface {
         {
             switch (field)
             {
-                /*case "id":
-                    predicates.add(cb.equal(root.get(field), (Integer)value));
-                    break;*/
                 case "name":
                     predicates.add(cb.like(root.get(field),"%"+(String)value+"%"));
                     break;
-                /*case "address":
-                    predicates.add(cb.like(root.get(field),"%"+(String)value+"%"));
-                    break;*/
+                case "created_date":
+                    //case GREATER_THAN:
+                    String hola = value.toString();
+                    LocalDate date = LocalDate.parse(value.toString());
+                    Date fecha = java.sql.Date.valueOf(date);
+                    predicates.add(cb.greaterThan(root.<Date>get(field),fecha));
+                    break;
+//                    case LESS_THAN:
+//                        predicates.add(cb.lessThan(root.<Date>get(field),(Date)value));
+//                        break;
+//                    case EQUAL:
+//                        predicates.add(cb.equal(root.<Date>get(field),(Date)value));
+//                        break;
             }
 
         });
